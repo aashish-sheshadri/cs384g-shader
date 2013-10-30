@@ -31,6 +31,6 @@ void main()
     if ( lightDirectionNorm.z >= 0.0){
         diffuse = max( dot(bNorm,lightDirectionNorm), 0.0);}
     vec3 halfNorm = normalize(halfAngle);
-    float specular = max(dot(bNorm,halfNorm),0);
+    float specular = max(dot(vec3(0,0,1),halfNorm),0);
 
     gl_FragColor = 0.5*(LMa + diffuse*LMd) + 0.5*pow(specular,shininess)*LMs + 0.6*textureCube(envmap, -1.0*reflect_vector);}

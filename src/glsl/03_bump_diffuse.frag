@@ -19,10 +19,10 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-    vec3 lightDirection_normalized = normalize(lightDirection);
-    vec3 bumpNormal = 2.0 * texture2D(normalMap,normalMapTexCoord).rgb - 1.0;
-    bumpNormal = bumpNormal*texture2D(heightField,normalMapTexCoord).rgb;
-    bumpNormal = normalize(bumpNormal);
-    float diffuse = max( dot(bumpNormal,lightDirection_normalized), 0.0);
-    gl_FragColor = LMa + diffuse*LMd;
-}
+    vec3 bNorm = 2.0 * texture2D(normalMap,vec2(normalMapTexCoord.x*6.0, normalMapTexCoord.y*-2.0)).rgb - 1.0;
+    bNorm = normalize(bNorm);
+    vec3 lightDirectionNorm = normalize(lightDirection);
+    float diffuse = 0.0;
+    if ( lightDirectionNorm.z >= 0.0){
+        diffuse = max( dot(bNorm,lightDirectionNorm), 0.0);}
+    gl_FragColor = LMa + diffuse*LMd;}

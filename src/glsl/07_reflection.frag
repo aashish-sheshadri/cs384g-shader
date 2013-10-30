@@ -19,6 +19,8 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-    vec3 eyeNorm = normalize(eyeDirection);
-    gl_FragColor = textureCube(envmap,reflect(eyeNorm,c2));  // XXX fix me
-}
+    mat3 M = mat3(c0, c1, c2);
+    vec3 eyeDirection_normalized = normalize(eyeDirection);
+    vec3 reflect_vector = M*reflect(eyeDirection_normalized,vec3(0,0,1));
+    reflect_vector = normalize(objectToWorld*reflect_vector);
+    gl_FragColor = textureCube(envmap, -1.0*reflect_vector);}

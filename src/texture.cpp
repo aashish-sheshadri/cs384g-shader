@@ -161,14 +161,13 @@ PackedNormal::PackedNormal(float3 normal)
 
 float3 NormalMap::computeNormal(int i, int j, float scale)
 {
-    unsigned char nextTex = image[(     (i+1)%width) + j*width];
-    unsigned char prevTex = image[(i-1<0?width-1:i-1)+ j*width];
-    unsigned char belowTex = image[i + ((j+1)%height)*width];
-    unsigned char aboveTex = image[i + (j-1<0?height-1:j-1)];
+    float rightTex = image[ (i+1)%width + j *width];
+    float topTex = image[ i + (j-1 < 0? height -1: j-1) *width];
+    float current = image[i + j * width];
 
-    float3 normal = float3(nextTex-prevTex,belowTex-aboveTex,1);
-    return normal;
-}
+    float3 normal = float3((-current+rightTex)*scale/255, (-current +topTex)*scale/255, 1);
+    normal = normalize(normal);
+    return normal;}
 
 bool NormalMap::load(float scale)
 {

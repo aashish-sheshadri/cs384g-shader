@@ -19,5 +19,18 @@ varying vec3 c0, c1, c2;
 
 void main()
 {
-  gl_FragColor = vec4(1,0,0,1);  // XXX fix me
-}
+    mat3 M = mat3(c0, c1, c2);
+    vec3 eyeDirection_normalized = normalize(eyeDirection);
+    vec3 bNorm = 2.0 * texture2D(normalMap,vec2(normalMapTexCoord.x*6.0, normalMapTexCoord.y*-2.0)).rgb - 1.0;
+    bNorm = normalize(bNorm);
+    vec3 reflect_vector = M*reflect(eyeDirection_normalized,bNorm);
+    reflect_vector = normalize(objectToWorld*reflect_vector);
+
+    vec3 lightDirectionNorm = normalize(lightDirection);
+    float diffuse = 0.0;
+    if ( lightDirectionNorm.z >= 0.0){
+        diffuse = max( dot(bNorm,lightDirectionNorm), 0.0);}
+    vec3 halfNorm = normalize(halfAngle);
+    float specular = max(dot(bNorm,halfNorm),0);
+
+    gl_FragColor = 0.5*(LMa + diffuse*LMd) + 0.5*pow(specular,shininess)*LMs + 0.6*textureCube(envmap, -1.0*reflect_vector);}
